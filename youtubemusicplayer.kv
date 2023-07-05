@@ -1,0 +1,80 @@
+#:kivy 1.9.0
+<Music>:
+    canvas.before:
+        Color:
+            rgba: 0.45, 0.18, 0.21, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    MDBoxLayout:
+        orientation: 'vertical'
+        size_hint: 1, 1
+        padding: 30, 30, 30, 0
+
+        MDBoxLayout:
+            orientation: 'vertical'
+            size_hint_y: None
+            size_hint_x: 1
+            height: 150
+            pos_hint: {'top': 1}
+            spacing: 15
+            
+            # Label:
+            #     text: "Enter a youtube video or playlist URL"
+            #     font_size: 18
+        
+            MDBoxLayout:
+                orientation: 'horizontal'
+                size_hint_x: 1
+                pos_hint: {'center_x': 0.5}
+                spacing: 10
+
+                MDTextField:
+                    # icon_right: 'play'
+                    icon_left: 'youtube'
+                    hint_text: "URL OF VIDEO OR PLAYLIST"
+                    multiline: False
+                    mode: 'rectangle'
+                    helper_text: "Enter video or playlist URL from youtube"
+                    helper_text_mode: "persistent"
+                    
+                MDIconButton:
+                    icon: 'play-box'
+                    # on press
+
+            Label:
+                padding: 0, 20, 0, 0
+                pos_hint: {'center_x': 0.5}
+                text: "STATUS: Not Playing"
+                font_size: 16
+
+            # Label:
+            #     # Song name
+            
+            # Label:
+            #     # Artist name
+
+        MDBoxLayout:
+            orientation: 'horizontal'
+            size_hint_x: None
+            pos_hint: {'center_x': 0.47}
+            padding: 0, 0, 0, 30
+
+            MDIconButton:
+                icon: "skip-previous-outline"
+                size_hint: None, None
+                user_font_size: '20sp' 
+                size: ('20dp', '20dp')
+
+            MDIconButton:
+                icon: "play-outline"
+                size_hint: None, None
+                user_font_size: '20sp' 
+                size: ('20dp', '20dp')
+
+            MDIconButton:
+                icon: "skip-next-outline"
+                size_hint: None, None
+                user_font_size: '20sp' 
+                size: ('20dp', '20dp')
