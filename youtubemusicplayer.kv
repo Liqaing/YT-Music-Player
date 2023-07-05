@@ -16,8 +16,8 @@
             orientation: 'vertical'
             size_hint_y: None
             size_hint_x: 1
-            height: 150
-            pos_hint: {'top': 1}
+            height: '150dp'
+            # pos_hint: {'top': 1}
             spacing: 15
             
             # Label:
@@ -28,26 +28,28 @@
                 orientation: 'horizontal'
                 size_hint_x: 1
                 pos_hint: {'center_x': 0.5}
-                spacing: 10
 
                 MDTextField:
                     # icon_right: 'play'
+                    id: url
                     icon_left: 'youtube'
                     hint_text: "URL OF VIDEO OR PLAYLIST"
+                    color: 1, 1, 1, 1
                     multiline: False
                     mode: 'rectangle'
+                    helper_text_mode: "on_error"
                     helper_text: "Enter video or playlist URL from youtube"
-                    helper_text_mode: "persistent"
+                    required: True
                     
                 MDIconButton:
                     icon: 'play-box'
-                    # on press
+                    on_press: root.start_music()
 
             Label:
                 padding: 0, 20, 0, 0
                 pos_hint: {'center_x': 0.5}
                 text: "STATUS: Not Playing"
-                font_size: 16
+                font_size: '18dp'
 
             # Label:
             #     # Song name
@@ -58,23 +60,24 @@
         MDBoxLayout:
             orientation: 'horizontal'
             size_hint_x: None
-            pos_hint: {'center_x': 0.47}
+            # size_x: 1
+            pos_hint: {'center_x': 0.5}
             padding: 0, 0, 0, 30
 
             MDIconButton:
                 icon: "skip-previous-outline"
                 size_hint: None, None
-                user_font_size: '20sp' 
+                user_font_size: '20dp' 
                 size: ('20dp', '20dp')
 
             MDIconButton:
                 icon: "play-outline"
                 size_hint: None, None
-                user_font_size: '20sp' 
+                user_font_size: '20dp' 
                 size: ('20dp', '20dp')
 
             MDIconButton:
                 icon: "skip-next-outline"
                 size_hint: None, None
-                user_font_size: '20sp' 
+                user_font_size: '20dp'
                 size: ('20dp', '20dp')
