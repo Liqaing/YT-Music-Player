@@ -1,10 +1,7 @@
 import kivy
 from kivymd.app import MDApp
 from kivymd.uix.boxlayout import MDBoxLayout
-import pafy
-import vlc
-import googleapiclient.discovery
-
+import re
 
 kivy.require('1.9.0')
 
@@ -23,26 +20,20 @@ class Music(MDBoxLayout):
         if not self.url:
             return
         
-        if self.url[:20] != "https://youtube.com/":
-            return "Invalid URL"
-        
         print(self.url)
 
         # Retrive ID from URL
-        self.id = check_video_or_playlist(self.url)
+        check_video_or_playlist(self.url)
 
-        print(self.id)
+        # print(self.id)
 
         # Validating
-        if not self.id:
-            return
+        # if not self.id:
+        #     return
 
-        if self.id["type"] == "video":
-            pass
+        # if self.id["type"] == "video":
+        #     pass
         
-
-# playlist pattern https://youtube.com/playlist?list=PLOxu-EtycI1lOoGBpE508PuvBsGHLOihJ
-# video pattern https://www.youtube.com/watch?v=y6cWxCFx1i8&list=PLOxu-EtycI1lOoGBpE508PuvBsGHLOihJ&index=1
 
 # Application
 class YoutubeMusicPlayer(MDApp):
@@ -52,31 +43,22 @@ class YoutubeMusicPlayer(MDApp):
         return Music()
 
 
+# playlist pattern https://youtube.com/playlist?list=PLOxu-EtycI1lOoGBpE508PuvBsGHLOihJ
+# video pattern https://youtu.be/_n_swXU3XEs
+
 # Check URL id video or playlist 
-def check_video_or_playlist(url: str) -> str:
+def check_video_or_playlist(url: str):
     # Check if url is a playlist url
-    if url[:34] == "https://youtube.com/playlist?list=":
-        info = {
-            'type': 'playlist',
-            'url': url[:34]
-        }
-        return info
-    elif url[:38] == "https://www.youtube.com/playlist?list=":
-        info = {
-            'type': 'playlist',
-            'url': url[:38]
-        }
-        return info
-
-    # Or is a video url
-    elif url[:32] == "https://www.youtube.com/watch?v=":
-        info = {
-            'type': 'video',
-            'url': url[:32]
-        }
-        return info
+    video_url_pattern = r"(^https://youtu.be/)([a-zA-Z0-9_-]{11})"
+    playlist_url_pattern = r"(^https://youtube.com/playlist?list=)([a-zA-Z0-9_-]{})"
+    
+    match = re.match(video_url_pattern, url)
+    if match:
+        print("True")
+        print(video_url_pattern)
+    
     else:
-        return False
-
+        print("Not match")
+    return
 if __name__ == '__main__':
     YoutubeMusicPlayer().run()
