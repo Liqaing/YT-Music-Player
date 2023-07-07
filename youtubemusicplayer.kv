@@ -17,7 +17,6 @@
             size_hint_y: None
             size_hint_x: 1
             height: '150dp'
-            # pos_hint: {'top': 1}
             spacing: 15
             
             # Label:
@@ -43,41 +42,50 @@
                     
                 MDIconButton:
                     icon: 'play-box'
-                    on_press: root.start_music()
+                    on_press: root.retrive_url()
 
             Label:
+                id: status
                 padding: 0, 20, 0, 0
                 pos_hint: {'center_x': 0.5}
                 text: "STATUS: Not Playing"
                 font_size: '18dp'
 
-            # Label:
-            #     # Song name
-            
-            # Label:
-            #     # Artist name
+            Label:
+                # Song name
+                # Artist name
 
         MDBoxLayout:
             orientation: 'horizontal'
             size_hint_x: None
             # size_x: 1
-            pos_hint: {'center_x': 0.5}
+            pos_hint: {'center_x': 0.45}
             padding: 0, 0, 0, 30
 
             MDIconButton:
-                icon: "skip-previous-outline"
+                id: stop
+                icon: "stop-circle-outline"
+                size_hint: None, None
+                user_font_size: '20dp' 
+                size: ('20dp', '20dp')
+                on_press: root.stop_music()
+
+            MDIconButton:
+                icon: "skip-previous-circle-outline"
                 size_hint: None, None
                 user_font_size: '20dp' 
                 size: ('20dp', '20dp')
 
             MDIconButton:
-                icon: "play-outline"
+                id: puase_and_resume_icon
+                icon: "play-circle-outline"
                 size_hint: None, None
                 user_font_size: '20dp' 
                 size: ('20dp', '20dp')
+                on_press: root.pause_and_resume()
 
             MDIconButton:
-                icon: "skip-next-outline"
+                icon: "skip-next-circle-outline"
                 size_hint: None, None
                 user_font_size: '20dp'
                 size: ('20dp', '20dp')
