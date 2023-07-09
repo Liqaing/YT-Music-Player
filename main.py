@@ -6,14 +6,19 @@ import pafy
 from kivy.core.audio import SoundLoader
 import googleapiclient.discovery
 import vlc
-import time
 
 kivy.require('1.9.0')
 
 class Audio_Player:
     def __init__(self):
-        self.instance = vlc.Instance()
-        self.player = self.instance.media_player_new()
+        # Create vlc player to video audio
+        self.player = vlc.MediaPlayer()
+        # VLC instance use for creating vlc media to play
+        self.media = vlc.Instance()
+
+        # For playlist audio
+        self.media_list_player = vlc.MediaListPlayer()
+        self.media_list = vlc.MediaList()
 
     # Play video audio
     def play_video(self, id):
@@ -26,15 +31,16 @@ class Audio_Player:
 
         # Retrive audio url
         audio_url = audio_stream.url
-        
+    
         # Play audio using python-vlc
         try:
-            media = self.instance.media_new(audio_url)
-        except:
+            media = self.media.media_new(audio_url)
+            self.player.set_media(media)
+            self.player.play()
+        except Exception as e:
+            print(str(e))
             return
-
-        self.player.set_media(media)
-        self.player.play()
+        
 
     # Play playlist audio
     def play_playlist(self, id):
@@ -62,10 +68,6 @@ class Audio_Player:
             videos.append(video)
 
         # Play video audio inside of playlist
-        media_player = vlc.MediaPlayer()
-        self.media_list_player = vlc.MediaListPlayer()
-        media_list = vlc.MediaList()
-
         for video in videos:
             # Create new pafy obj video
             video = pafy.new(video["video_id"])
@@ -78,14 +80,14 @@ class Audio_Player:
             
             # Play audio using python-vlc
             try:
-                media = self.instance.media_new(audio_url)
+                media = self.media.media_new(audio_url)
             except:
                 return
 
-            media_list.add_media(media)
+            self.media_list.add_media(media)
 
-        self.media_list_player.set_media_list(media_list)
-        self.media_list_player.set_media_player(media_player)
+        self.media_list_player.set_media_list(self.media_list)
+        self.media_list_player.set_media_player(self.player)
         self.media_list_player.play_item_at_index(0)
 
     def stop(self):
