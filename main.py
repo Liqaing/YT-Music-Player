@@ -4,8 +4,9 @@ from kivymd.uix.boxlayout import MDBoxLayout
 import re
 import pafy
 from kivy.core.audio import SoundLoader
-import googleapiclient
+import googleapiclient.discovery
 import vlc
+import time
 
 kivy.require('1.9.0')
 
@@ -14,8 +15,9 @@ class Audio_Player:
         self.instance = vlc.Instance()
         self.player = self.instance.media_player_new()
 
+    # Play video audio
     def play_video(self, id):
-        
+
         # Create new pafy obj video
         video = pafy.new(id)
         
@@ -32,11 +34,60 @@ class Audio_Player:
             return
 
         self.player.set_media(media)
-
         self.player.play()
-        # while self.player.is_playing():
-        #     pass
-    
+
+    # Play playlist audio
+    def play_playlist(self, id):
+        api_key = "AIzaSyBkpY4xMyCSMgFX4opcnyS7Q03x96yzDFk"
+
+        # Create obj to communicate with API
+        youtube = googleapiclient.discovery.build(
+            "youtube", "v3", developerKey=api_key
+        )
+
+        # Get snippet (data) of video from playlist
+        request = youtube.playlistItems().list(
+            part = "snippet",
+            maxResults = 50,
+            playlistId = id # id is id of playlist from the input url
+        ).execute()
+
+        # Retrive all video url from the returned data
+        videos = []
+        for video_data in request["items"]:
+            video = {
+                "video_id": video_data["snippet"]["resourceId"]["videoId"],
+                "title": video_data["snippet"]["title"]
+            }
+            videos.append(video)
+
+        # Play video audio inside of playlist
+        media_player = vlc.MediaPlayer()
+        self.media_list_player = vlc.MediaListPlayer()
+        media_list = vlc.MediaList()
+
+        for video in videos:
+            # Create new pafy obj video
+            video = pafy.new(video["video_id"])
+            
+            # Extract best audio from video
+            audio_stream = video.getbestaudio()
+
+            # Retrive audio url
+            audio_url = audio_stream.url
+            
+            # Play audio using python-vlc
+            try:
+                media = self.instance.media_new(audio_url)
+            except:
+                return
+
+            media_list.add_media(media)
+
+        self.media_list_player.set_media_list(media_list)
+        self.media_list_player.set_media_player(media_player)
+        self.media_list_player.play_item_at_index(0)
+
     def stop(self):
         if self.player.is_playing():
             self.player.stop()
@@ -46,6 +97,7 @@ class Audio_Player:
         
     def resume(self):
         self.player.set_pause(0)
+
 
 class Music(MDBoxLayout):
     # Construtor
@@ -80,8 +132,10 @@ class Music(MDBoxLayout):
                 self.ids.status.text = "Status: Playing Video Audio"
             except:
                 print("error")
-
+        
         # If playlist
+        else:
+            self.player.play_playlist(self.id)
 
     # Stop playing music
     def stop_music(self):
